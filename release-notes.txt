@@ -1,0 +1,58 @@
+MOP Feature Tests Release Notes:
+
+v0.0 initial release
+
+v0.1
+- some function symbols are exported by the common-lisp package instead of the respective MOP package. fixed
+- find-method-combination exists in some implementations, but may not be called by defgeneric. These two cases are now distinguished.
+- In OpenMCL, slot-value-using-class cannot be specialized just on a given class, but must mention a new metaclass. This is a bug, but the test has been changed nevertheless.
+- Obviously in PCL-based CLOS implementations, one can only defined at most one subclass of standard-generic-function. Therefore, I have rearranged the test suite in order to make it run successfully in CMUCL and SBCL.
+- Added more tests for validate-superclass.
+- CLISP didn't export standard-accessor-method, but this is fixed now. The respective entries for known missing features and known structure leaks have been removed.
+- added checks for the correct passing of canonicalized slot options to direct-slot-definition-class and effective-slot-definition-class
+- effective slots are determined during class finalization, not initialization. I have corrected the corresponding feature descriptions.
+- writers and readers are not passed to effective-slot-definition-class. corrected.
+- I have forgotten to include slot-definition-location. corrected.
+- standard methods and accessor methods are initialized differently. corrected.
+- I have forgotten to include :initargs-passed-to-direct/effective-slot-definition-class. corrected.
+- Fixed a few tests to make them run better with fixes introduced by closer-mop.
+- The dependent protocol does work in some implementations, but the examples in AMOP don't work well. corrected in favor of existing implementations.
+
+v0.2
+- In some implementations, standard-class and funcallable-standard-class are compatible when the standard-class doesn't define any slots (Allegro and LispWorks). This has led to some confusion which is now fixed. The result is that Allegro and LispWorks are assumed to be non-compliant in this regard.
+- The path to the directory that contains the main Lisp file is now defined in a portable way. (Thanks to Marco Baringer.)
+
+v0.3
+- Support for Allegro Common Lisp 7.0 added. (Actually, worked just right out of the box, but nevertheless... ;)
+- Support for Macintosh Common Lisp 5.1 added.
+- Support for LispWorks 4.3 is discontinued.
+- The check whether defmethod calls make-method-lambda was incorrect. Fixed. Now it is correctly reported that CMU CL and SBCL use make-method-lambda as specified.
+- Changed the license to a BSD/MIT-style license.
+
+v0.4
+- The class METAOBJECT now exists in SBCL. (It did so since SBCL 0.9.5.)
+- In SBCL, the metaclasses STANDARD-CLASS and FUNCALLABLE-STANDARD-CLASS are now compatible. There remains a (reasonable) consistency requirement over the presence or absence of the FUNCTION class in the superclass list of finalized classes. See the SBCL manual for more details. (This metaclass compatibility was already introduced in SBCL 0.9.5.)
+- In the summary section of features.txt, I now repeat that Allegro doesn't have compatible STANDARD-CLASS and FUNCALLABLE-STANDARD-CLASS metaclasses. (Thanks to Christophe Rhodes for spotting this, who believed that they are compatible in Allegro. However, they are only compatible if they don't define any slots.)
+- In known-but-untested-problems.txt, I had claimed that object initialization doesn't happen correctly in shared-initialize in SBCL. This was a mistake on my side. I had a test case that just accidentally worked in other implementations. Neither ANSI CL nor AMOP have specified anything that should have made that test case work in the first place. (Thanks to Christophe Rhodes for correcting me.)
+- Added a test for checking whether the slot order requested by a primary method for COMPUTE-SLOTS is honoured by a MOP. (Thanks to Christophe Rhodes for the suggestion.)
+- Added tests for checking whether the object returned by compute-discriminating-function can be funcalled and whether the second parameter to set-funcallable-instance-function can be a "real" closure. (In known-but-untested-problems, I had claimed that this is not the case for CMUCL and SBCL but for SBCL, this is no longer true since SBCL 0.9.4. Thanks to Christophe Rhodes for pointing this out.)
+- OpenMCL 1.0 now supports (setf generic-function-name) and implements it correctly by calling reinitialize-instance.
+- Dropped support for LispWorks 4.3. Please upgrade to LispWorks 4.4 or better.
+- Added a test to check whether one can use one's own :allocation types.
+- The dependent protocol now works fully in CMUCL 19C.
+- Added a test that checks whether generic functions without any method defined can still be called.
+- Added a test that checks whether methods can have multiple qualifiers.
+- Dropped support for Allegro 6.2. Please upgrade to Allegro 7.0 or better.
+- The test whether slot-xxx functions call slot-xxx-using-class correctly was too coarse-grained. In Allegro, slot-value-using-class and (setf slot-value-using-class) correctly take slot-definition metaobjects, but slot-boundp-using-class and slot-makunbound-using-class take symbols. Therefore, the report is now more fine-grained.
+- The dependent maintenance protocol now works in SBCL 0.9.7.
+- In SBCL 0.9.7, the documentation option is now correctly passed to effective slot definitions.
+- In SBCL 0.9.7, reinitialize-instance now correctly always calls compute-discriminating-function.
+- In SBCL 0.9.7, (setf class-name) and (setf generic-function-name) are now correctly implemented by calling reinitialize-instance.
+- Checked against clisp 2.36 - no changes.
+- Checked against SBCL 0.9.8 - no changes compared to SBCL 0.9.7.
+- Added a test whether reinitialize-instance on class metaobject calls finalize-inheritance on that same class metaobject. Luckily, all implementations pass that test.
+- Checked against clisp 2.37 - one can now define one's own :allocation kinds.
+- Support for Allegro Common Lisp 8.0 added.
+- Checked against clisp 2.38 and SBCL 0.9.9 - no changes.
+
+After version 0.4, there are no separate release notes anymore, but they will be generated automatically by darcs in the future.
