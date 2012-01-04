@@ -2,6 +2,7 @@
 
 (defparameter *mop-package-name*
   #+allegro "MOP" ;; "CLOS" "ACLMOP"
+  #+abcl "MOP" ;; 
   #+clisp "CLOS"
   #+cmu "CLOS-MOP" ;; "MOP"
   #+ecl "CLOS"
